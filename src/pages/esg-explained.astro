@@ -1,0 +1,28 @@
+---
+// src/pages/esg-explained.astro
+import MainLayout from '../layouts/MainLayout.astro';
+import InteractiveSection from '../components/InteractiveSection.astro';
+import { esgSectionsData } from '../content/esgSectionsData'; // Path will be updated after esgSectionsData is modified
+
+const pageTitle = "Understanding ESG: The Blueprint for Sustainable Real Estate | Impactful Places";
+const pageDescription = "A nuanced understanding of Environmental, Social, and Governance (ESG) factors is crucial for unlocking long-term value and resilience in the real estate sector.";
+
+---
+<MainLayout title={pageTitle} description={pageDescription}>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <header class="text-center mb-12 md:mb-16 animate-on-scroll">
+      <h1 class="text-4xl md:text-5xl font-bold font-heading text-brand-green mb-6">Understanding ESG: The Blueprint for Sustainable Real Estate</h1>
+      <p class="text-lg md:text-xl text-text-primary/80 max-w-3xl mx-auto">
+        A nuanced understanding of Environmental, Social, and Governance (ESG) factors is crucial for unlocking long-term value and resilience in the real estate sector. Impactful Places provides the clarity and strategic insight needed to navigate this complex landscape effectively.
+      </p>
+    </header>
+
+    {/* Interactive ESG Section */}
+    <div class="mb-12 md:mb-16 animate-on-scroll" style="transition-delay: 200ms;">
+      <InteractiveSection sections={esgSectionsData} />
+    </div>
+
+    {/* Concluding section removed as per user request to exclude the circled part from screenshot 1 */}
+
+  </div>
+</MainLayout>

@@ -1,0 +1,71 @@
+---
+// src/pages/associates.astro
+import MainLayout from '../layouts/MainLayout.astro';
+// import { Image } from 'astro:assets'; // Image component no longer needed
+
+// Import logos - No longer needed
+// import AkouLogo from '../assets/images/associates/AKOU_logo.png';
+// import MeaningfulLogo from '../assets/images/associates/meaningful.png';
+// import ShiftEnvironmentLogo from '../assets/images/associates/shift_logo.webp';
+
+
+const pageTitle = "Our Associates | Impactful Places";
+const pageDescription = "Meet the experienced, multidisciplinary team of associates Impactful Places collaborates with to deliver comprehensive ESG solutions.";
+
+const introParagraph = "Impactful Places works with an experienced, multidisciplinary team of associates spanning community engagement, environmental management, PR, communications and research to provide services across the full spectrum of ESG.";
+
+const associates = [
+  {
+    name: "AKOU",
+    // logo: AkouLogo, // Logo removed
+    description: "AKOU is an independent social impact advisory and research consultancy, helping clients to measure the impact of their activities on society and understand how their investment can deliver the most benefit. At the heart of AKOU’s approach is a focus on social capital, supporting clients to understand, create and grow their impact networks. AKOU believes in delivering and measuring social impact in partnership with people, meaning its work is always collaborative and community-driven. The team, which is co-founder led, provides community-led research and insight; stakeholder mapping and engagement; and social impact design, delivery and measurement services. Combining meaningful engagement, digital tools, data analysis and quality storytelling, AKOU helps clients to ground their social impact measurement and delivery in real-life settings, supporting them to make positive differences in the way they operate."
+  },
+  {
+    name: "MEANINGFUL",
+    // logo: MeaningfulLogo, // Logo removed
+    description: "Meaningful is a strategic communications and PR agency for real estate and the built environment, specialising in projects that deliver social and environmental impact. The agency’s senior team works closely and collaboratively with clients, helping them find and tell meaningful stories about ESG and translating their work into compelling communications that consistently deliver impact, reach and results."
+  },
+  {
+    name: "SHIFT ENVIRONMENT",
+    // logo: ShiftEnvironmentLogo, // Logo removed
+    description: "SHIFT Environment is a founder-led team of professional environmentalists working in the UK built environment. SHIFT transforms client data into accessible environmental reports, developing environmental strategy to support current and forecasted environmental performance, providing environmental compliance advisory, delivering ESG reporting that meets investor expectations, together with portfolio analysis addressing resource use to optimize operations, reduce energy risk and cost and manage reputation."
+  },
+  {
+    name: "TPFCONSULTING",
+    // logo: null, // Logo property removed
+    description: "TPF Consulting Ltd, led by Tim Francis, provides independent research, strategy, risk management and policy and impact assessment services to the built environment sector. With 25 years’ of experience undertaking research and investment strategy projects in international real estate markets in major global advisory, investment management and development companies. With a strong understanding of real estate investment and risk management processes, TPF Consulting helps to create innovative research-led solutions that drive positive financial, environmental and social outcomes."
+  }
+];
+---
+<MainLayout title={pageTitle} description={pageDescription}>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <header class="text-center mb-12 md:mb-16 animate-on-scroll">
+      <h1 class="text-4xl md:text-5xl font-bold font-heading text-brand-green mb-4">Our Associates</h1>
+      <p class="text-lg md:text-xl text-text-primary/80 max-w-3xl mx-auto">
+        {introParagraph}
+      </p>
+    </header>
+
+    <div class="grid md:grid-cols-2 gap-8 lg:gap-10">
+      {associates.map((associate, index) => (
+        <article class="bg-white p-6 md:p-8 rounded-lg shadow-lg flex flex-col animate-on-scroll" style={`transition-delay: ${index * 100 + 100}ms`}>
+          <div class="mb-4"> {/* Removed flex items-center space-x-4 as logo is gone */}
+            {/* {associate.logo && ( // Logo rendering removed
+              <Image 
+                src={associate.logo} 
+                alt={`${associate.name} Logo`} 
+                width={80} 
+                height={80} 
+                class="object-contain" 
+              />
+            )} */}
+            <h2 class="text-2xl md:text-3xl font-bold font-heading text-brand-green">{associate.name}</h2>
+          </div>
+          <p class="text-text-primary/90 leading-relaxed text-base flex-grow">
+            {associate.description}
+          </p>
+        </article>
+      ))}
+    </div>
+  </div>
+</MainLayout>

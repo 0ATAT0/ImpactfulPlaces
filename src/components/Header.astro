@@ -1,0 +1,120 @@
+---
+// src/components/Header.astro
+const navLinks = [
+  { href: "/", text: "Home" },
+  { href: "/about", text: "About" },
+  { href: "/esg-explained", text: "ESG Explored" },
+  { href: "/services", text: "Services" },
+  { href: "/leadership", text: "Leadership" },
+  { href: "/associates", text: "Associates" },
+  { href: "/contact", text: "Contact" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 bg-bg-light shadow-md"> {/* Using shadow-md for a slightly more visible border */}
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 md:h-20"> {/* Increased height slightly for more space */}
+      {/* Logo Placeholder */}
+      <div class="flex-shrink-0">
+        <a href="/" class="text-xl sm:text-2xl font-bold font-heading text-brand-green hover:text-brand-green transition-colors duration-150 ease-in-out">
+          Impactful Places
+        </a>
+      </div>
+
+      {/* Desktop Navigation */}
+      <nav class="hidden md:flex items-center space-x-5 lg:space-x-7">
+        {navLinks.map(link => (
+          <a 
+            href={link.href} 
+            class:list={[
+              "text-sm lg:text-base font-medium hover:text-brand-green hover:no-underline transition-colors duration-150 ease-in-out pb-1 focus:outline-none focus-visible:text-brand-green focus-visible:border-brand-green/75",
+              currentPath === link.href 
+                ? "text-brand-green border-b-2 border-brand-green" 
+                : `text-text-primary hover:border-b-2 hover:border-brand-green/50`,
+              currentPath !== link.href && "border-b-2 border-transparent" // Keep space for border on non-active items
+            ]}
+            aria-current={currentPath === link.href ? "page" : undefined}
+          >
+            {link.text}
+          </a>
+        ))}
+      </nav>
+
+      {/* Mobile Menu Button */}
+      <div class="md:hidden flex items-center">
+        <button 
+          id="mobile-menu-button" 
+          type="button" 
+          class="inline-flex items-center justify-center p-2 rounded-md text-text-primary hover:text-brand-green hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-green" 
+          aria-controls="mobile-menu" 
+          aria-expanded="false"
+        >
+          <span class="sr-only">Open main menu</span>
+          {/* Hamburger Icon */}
+          <svg id="icon-hamburger" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+          {/* Close Icon - initially hidden */}
+          <svg id="icon-close" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {/* Mobile Menu - hidden by default, shown on toggle */}
+  <div class="hidden md:hidden bg-bg-light shadow-lg" id="mobile-menu">
+    <nav class="px-2 pt-2 pb-4 space-y-1 sm:px-3 border-t border-gray-200">
+      {navLinks.map(link => (
+        <a 
+          href={link.href} 
+          class:list={[
+            "block px-3 py-2 rounded-md text-base font-medium transition-colors duration-150 ease-in-out focus:outline-none focus-visible:bg-gray-200 focus-visible:text-brand-green",
+            currentPath === link.href 
+              ? "bg-brand-green text-white" 
+              : "text-text-primary hover:bg-gray-100 hover:text-brand-green"
+          ]}
+          aria-current={currentPath === link.href ? "page" : undefined}
+        >
+          {link.text}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const menuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const iconHamburger = document.getElementById('icon-hamburger');
+  const iconClose = document.getElementById('icon-close');
+
+  if (menuButton && mobileMenu && iconHamburger && iconClose) {
+    menuButton.addEventListener('click', () => {
+      const isExpanded = menuButton.getAttribute('aria-expanded') === 'true' || false;
+      menuButton.setAttribute('aria-expanded', String(!isExpanded));
+      mobileMenu.classList.toggle('hidden');
+      // Optional: Animate mobile menu (e.g., slide down)
+      // if (!isExpanded) {
+      //   mobileMenu.style.maxHeight = mobileMenu.scrollHeight + "px";
+      // } else {
+      //   mobileMenu.style.maxHeight = "0";
+      // }
+      iconHamburger.classList.toggle('hidden');
+      iconClose.classList.toggle('hidden');
+    });
+
+    // Close mobile menu when a link is clicked (for SPA-like behavior with ViewTransitions)
+    const mobileNavLinks = mobileMenu.querySelectorAll('a');
+    mobileNavLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (menuButton.getAttribute('aria-expanded') === 'true') {
+          menuButton.click(); // Simulate a click to close the menu
+        }
+      });
+    });
+  }
+</script>

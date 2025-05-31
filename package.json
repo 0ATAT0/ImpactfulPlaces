@@ -9,6 +9,14 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.8.1"
+    "@astrojs/tailwind": "^6.0.2",
+    "@iconify-json/lucide": "^1.2.45",
+    "astro": "^5.8.1",
+    "astro-icon": "^1.1.5",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.4"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
   }
 }

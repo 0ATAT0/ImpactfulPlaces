@@ -1,0 +1,79 @@
+---
+// src/pages/leadership.astro
+import MainLayout from '../layouts/MainLayout.astro';
+import { Image } from 'astro:assets';
+
+const pageTitle = "Leadership: Vivienne King | Impactful Places";
+const pageDescription = "Meet Vivienne King, founder of Impactful Places, and learn about her extensive experience and leadership in ESG and the real estate industry.";
+
+// Content from Brochure (P5)
+const vivienneBio = {
+  fullName: "Vivienne King",
+  intro: "Vivienne King is founder of Impactful Places, an independent strategic advisory specialising in helping the real estate industry achieve its full impact potential.",
+  trackRecord: "With a strong track record advocating for environmental and social sustainability, Vivienne has held leadership positions in real estate for more than 30 years as a principal and consultant, working in urban development, regeneration and management, joint venture partnerships, strategy development and ESG.",
+  priorExperience: [
+    "Prior to founding Impactful Places in 2024, Vivienne was Head of Real Estate at impact consultancy The Good Economy.",
+    "She held CEO roles at Revo, the retail property trade association and Soho Housing Association, together with its commercial arm, Soho Ltd.",
+    "Over 20 years of her career was with £14 billion institutional real estate investor, the Crown Estate, where as General Counsel and member of its Executive Committee, she held a wide range of responsibilities including its corporate ESG strategy."
+  ],
+  currentRoles: "Vivienne is the current Chair of the Shopkeepers Campaign for business rates reform; a co-founder of equality, diversity and inclusion campaigning organisation Real Estate Balance and now a member of its Patrons Group; a LandAid Patron and Executive Vice President of the Story of Christmas.",
+  recognition: "In 2023, Vivienne was inducted into the Property Week Hall of Fame for her work in the real estate industry.",
+  email: "vivienne@impactfulplaces.co.uk",
+  phone: "+44 771 3087781"
+};
+---
+<MainLayout title={pageTitle} description={pageDescription}>
+  <article class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <header class="text-center mb-12 md:mb-16 animate-on-scroll">
+      <h1 class="text-4xl md:text-5xl font-bold font-heading text-brand-green">
+        Meet Our Founder: {vivienneBio.fullName}
+      </h1>
+    </header>
+
+    <div class="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start max-w-6xl mx-auto">
+      {/* Left Column: Photo Placeholder */}
+      <aside class="lg:w-1/3 flex-shrink-0 w-full mx-auto lg:sticky lg:top-28 animate-on-scroll" style="transition-delay: 100ms;"> {/* Sticky for larger screens */}
+        <Image 
+          src={import('../assets/images/headshot.jpg')} 
+          alt={`Professional photo of ${vivienneBio.fullName}`} 
+          class="w-full max-w-md mx-auto h-auto object-cover rounded-lg shadow-xl aspect-[4/5]"
+          widths={[300, 600, 900]}
+          sizes="(max-width: 768px) 90vw, (max-width: 1024px) 30vw, 300px"
+        />
+      </aside>
+
+      {/* Right Column: Bio Content */}
+      <section class="lg:w-2/3 space-y-6 text-text-primary/90 text-base md:text-lg leading-relaxed animate-on-scroll" style="transition-delay: 200ms;">
+        <p class="text-xl md:text-2xl font-semibold text-brand-green">{vivienneBio.intro}</p>
+        
+        <div class="space-y-4">
+          <h2 class="text-2xl font-bold font-heading text-brand-green border-b-2 border-brand-green/50 pb-2">Track Record & Expertise</h2>
+          <p>{vivienneBio.trackRecord}</p>
+        </div>
+
+        <div class="space-y-4">
+          <h2 class="text-2xl font-bold font-heading text-brand-green border-b-2 border-brand-green/50 pb-2">Prior Experience</h2>
+          {vivienneBio.priorExperience.map(paragraph => (
+            <p>{paragraph}</p>
+          ))}
+        </div>
+
+        <div class="space-y-4">
+          <h2 class="text-2xl font-bold font-heading text-brand-green border-b-2 border-brand-green/50 pb-2">Current Roles & Recognition</h2>
+          <p>{vivienneBio.currentRoles}</p>
+          <p class="font-semibold italic">{vivienneBio.recognition}</p>
+        </div>
+
+        <div class="pt-6 mt-6 border-t border-gray-200">
+          <h3 class="text-xl font-bold font-heading text-brand-green mb-3">Contact Vivienne</h3>
+          <p>
+            Email: <a href={`mailto:${vivienneBio.email}`} class="text-brand-green hover:underline">{vivienneBio.email}</a>
+          </p>
+          <p>
+            Phone: <a href={`tel:${vivienneBio.phone.replace(/\s/g, '')}`} class="text-brand-green hover:underline">{vivienneBio.phone}</a>
+          </p>
+        </div>
+      </section>
+    </div>
+  </article>
+</MainLayout>

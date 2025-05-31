@@ -1,0 +1,223 @@
+---
+// src/components/InteractiveSection.astro
+import { Icon } from 'astro-icon/components'; // Import Icon from astro-icon
+
+export interface ContentDetail {
+  type: 'paragraph' | 'subheading' | 'list' | 'statistic' | 'footnote'; // Added 'footnote'
+  text?: string;
+  items?: string[];
+}
+
+export interface Section {
+  id: string;
+  buttonText: string;
+  icon?: string; // Changed from iconSVGName to icon (string for astro-icon)
+  // iconDescription is no longer needed as astro-icon handles accessibility
+  activeBgColor: string;
+  activeTextColor: string;
+  inactiveIconColorClass: string;
+  inactiveTextColorClass: string;
+  contentTitle: string;
+  contentDetails: ContentDetail[];
+}
+
+export interface Props {
+  sections: Section[];
+}
+
+const { sections } = Astro.props;
+
+const sectionsForScript = sections.map(s => ({
+  id: s.id,
+  activeBgColor: s.activeBgColor,
+  activeTextColor: s.activeTextColor,
+  inactiveIconColorClass: s.inactiveIconColorClass,
+  inactiveTextColorClass: s.inactiveTextColorClass,
+}));
+const sectionsJson = JSON.stringify(sectionsForScript);
+
+const baseButtonClasses = "min-w-[180px] md:min-w-[200px] py-3 px-4 rounded-lg shadow-md transition-all duration-200 focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2 flex items-center justify-center space-x-3 text-base font-medium";
+// Initial inactive state classes are applied by script to ensure correct dynamic coloring.
+---
+
+<div class="interactive-section-container" data-sections={sectionsJson}>
+  <div class="buttons-row flex flex-wrap gap-4 md:gap-6 justify-center mb-6 md:mb-8">
+    {sections.map((section) => (
+      <button
+        data-section-id={section.id}
+        class:list={[
+          'button-item',
+          baseButtonClasses,
+          // Specific inactive/active styles are managed by the script below
+        ]}
+        aria-pressed="false"
+        aria-controls={`content-${section.id}`}
+      >
+        {/* Icon and Span will have their classes manipulated by script */}
+        {section.icon && <Icon name={section.icon} class:list={['w-5 h-5']} />} {/* Use astro-icon's Icon component */}
+        <span>{section.buttonText}</span>
+      </button>
+    ))}
+  </div>
+
+  {sections.map((section) => (
+    <div
+      id={`content-${section.id}`}
+      class="content-card bg-white p-6 rounded-lg shadow-md mt-4 hidden opacity-0 transition-opacity duration-300 ease-in-out"
+      role="region"
+      aria-labelledby={`${section.id}-button`}
+    >
+      <h3 class="text-2xl font-heading font-semibold mb-4 text-text-primary">{section.contentTitle}</h3>
+      {section.contentDetails.map(detail => {
+        switch (detail.type) {
+          case 'paragraph':
+            return <p class="mb-4 text-text-primary">{detail.text}</p>;
+          case 'subheading':
+            return <h4 class="text-xl font-heading font-semibold mt-6 mb-2 text-text-primary">{detail.text}</h4>;
+          case 'list':
+            return (
+              <ul class="list-disc list-outside mb-4 pl-4 text-text-primary space-y-1">
+                {detail.items?.map(item => <li class="break-words">{item}</li>)}
+              </ul>
+            );
+          case 'statistic':
+            // Use section's activeBgColor for background and activeTextColor for text
+            return <p class:list={["text-lg my-4 p-4 rounded-md", section.activeBgColor, section.activeTextColor]}>{detail.text}</p>; // Removed font-semibold
+          case 'footnote':
+            return <p class="text-sm italic text-gray-600 mt-4">{detail.text}</p>; // Styling for footnote
+          default:
+            return null;
+        }
+      })}
+    </div>
+  ))}
+</div>
+
+<script>
+  // src/components/InteractiveSection.astro script
+  function initInteractiveSection() {
+    const container = document.querySelector('.interactive-section-container') as HTMLElement | null;
+    if (!container) return;
+
+    // Check if already initialized to prevent multiple initializations on fast navigations
+    if (container.dataset.initialized === 'true') {
+      return;
+    }
+    container.dataset.initialized = 'true';
+
+    const buttons = container.querySelectorAll('.button-item') as NodeListOf<HTMLButtonElement>;
+    const contentCards = container.querySelectorAll('.content-card') as NodeListOf<HTMLElement>;
+    
+    const sectionsData = JSON.parse(container.dataset.sections || '[]') as { 
+      id: string, 
+      activeBgColor: string, 
+      activeTextColor: string,
+      inactiveIconColorClass: string,
+      inactiveTextColorClass: string
+    }[];
+
+    let activeSectionId: string | null = null;
+
+    // Create a unique list of all text color classes used in any section (active or inactive)
+    const allTextColorsUsed = [...new Set(
+      sectionsData.flatMap(s => [s.activeTextColor, s.inactiveTextColorClass])
+    )];
+    const allIconColorsUsed = [...new Set(
+      sectionsData.flatMap(s => [s.activeTextColor, s.inactiveIconColorClass]) // Assuming active icon color is same as active text color
+    )];
+    // All background colors used for active state + the default inactive ones
+    const allBgColorsUsed = [...new Set(
+        sectionsData.map(s => s.activeBgColor).concat(['bg-gray-100', 'hover:bg-gray-200'])
+    )];
+
+
+    function styleButton(buttonEl: HTMLButtonElement, config: typeof sectionsData[0], isActive: boolean) {
+      const iconEl = buttonEl.querySelector('svg');
+      const textEl = buttonEl.querySelector('span');
+      
+      // Remove all potentially existing dynamic classes to ensure a clean slate
+      allBgColorsUsed.forEach(cls => buttonEl.classList.remove(cls));
+      buttonEl.classList.remove('border', 'border-gray-300'); // Specific border classes for inactive
+
+      if (iconEl) {
+        allIconColorsUsed.forEach(cls => iconEl.classList.remove(cls));
+      }
+      if (textEl) {
+        allTextColorsUsed.forEach(cls => textEl.classList.remove(cls));
+      }
+
+      if (isActive) {
+        buttonEl.classList.add(config.activeBgColor);
+        // No border for active button per screenshot
+        if (iconEl) iconEl.classList.add(config.activeTextColor);
+        if (textEl) textEl.classList.add(config.activeTextColor);
+        buttonEl.setAttribute('aria-pressed', 'true');
+      } else {
+        buttonEl.classList.add('bg-gray-100', 'hover:bg-gray-200', 'border', 'border-gray-300');
+        if (iconEl) iconEl.classList.add(config.inactiveIconColorClass);
+        if (textEl) textEl.classList.add(config.inactiveTextColorClass);
+        buttonEl.setAttribute('aria-pressed', 'false');
+      }
+    }
+
+    buttons.forEach(button => {
+      const initialSectionId = button.dataset.sectionId;
+      const initialConfig = sectionsData.find(s => s.id === initialSectionId);
+      if (initialConfig) {
+        styleButton(button, initialConfig, false); // Apply initial inactive style
+      }
+
+      button.addEventListener('click', () => {
+        const sectionId = button.dataset.sectionId;
+        if (!sectionId) return;
+
+        const sectionConfig = sectionsData.find(s => s.id === sectionId);
+        if (!sectionConfig) return;
+
+        const currentCard = container.querySelector(`#content-${sectionId}`) as HTMLElement | null;
+
+        if (activeSectionId === sectionId) {
+          // Deactivate current section
+          styleButton(button, sectionConfig, false);
+          if (currentCard) {
+            currentCard.classList.add('hidden');
+            currentCard.classList.remove('opacity-100');
+            currentCard.classList.add('opacity-0');
+          }
+          activeSectionId = null;
+        } else {
+          // Deactivate previously active section (if any)
+          if (activeSectionId) {
+            const previousActiveButton = container.querySelector(`.button-item[data-section-id="${activeSectionId}"]`) as HTMLButtonElement | null;
+            const previousSectionConfig = sectionsData.find(s => s.id === activeSectionId);
+            if (previousActiveButton && previousSectionConfig) {
+              styleButton(previousActiveButton, previousSectionConfig, false);
+            }
+            const previousCard = container.querySelector(`#content-${activeSectionId}`) as HTMLElement | null;
+            if (previousCard) {
+              previousCard.classList.add('hidden');
+              previousCard.classList.remove('opacity-100');
+              previousCard.classList.add('opacity-0');
+            }
+          }
+
+          // Activate new section
+          styleButton(button, sectionConfig, true);
+          if (currentCard) {
+            currentCard.classList.remove('hidden');
+            setTimeout(() => {
+              currentCard.classList.remove('opacity-0');
+              currentCard.classList.add('opacity-100');
+            }, 10); 
+          }
+          activeSectionId = sectionId;
+        }
+      });
+    });
+  }
+
+  // Run on initial page load
+  initInteractiveSection();
+  // Run after view transitions
+  document.addEventListener('astro:page-load', initInteractiveSection);
+</script>

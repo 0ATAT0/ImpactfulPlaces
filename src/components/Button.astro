@@ -1,0 +1,82 @@
+---
+// src/components/Button.astro
+import type { HTMLAttributes } from 'astro/types';
+
+// Common props for both link and button
+interface BaseElementProps {
+  variant: 'primary' | 'secondary';
+  size?: 'sm' | 'md' | 'lg';
+  class?: string | undefined; // For Astro.props.class, will be merged by class:list
+  // Allow any other data-* or aria-* attributes commonly used
+  [key: `data-${string}`]: any;
+  [key: `aria-${string}`]: any;
+}
+
+// Props when rendering as an <a> tag
+// Omit variant, size, class from HTMLAttributes<'a'> as they are in BaseElementProps or handled by class:list
+type LinkSpecificAttrs = Omit<HTMLAttributes<'a'>, 'variant' | 'size' | 'class' | 'href'>;
+interface LinkProps extends BaseElementProps, LinkSpecificAttrs {
+  href: string;
+  isSubmit?: never; // Ensure isSubmit is not used with href
+}
+
+// Props when rendering as a <button> tag
+// Omit variant, size, class, type from HTMLAttributes<'button'>
+type ButtonSpecificAttrs = Omit<HTMLAttributes<'button'>, 'variant' | 'size' | 'class' | 'type'>;
+interface ActionButtonProps extends BaseElementProps, ButtonSpecificAttrs {
+  href?: never; // Ensure href is not used with button
+  isSubmit?: boolean;
+}
+
+export type Props = LinkProps | ActionButtonProps;
+
+const {
+  variant,
+  size = 'md', // Default size to 'md'
+  class: passThroughClass,
+  ...rest // Contains href OR isSubmit, plus other HTML attributes
+} = Astro.props as Props;
+
+const Tag = 'href' in rest && rest.href ? 'a' : 'button';
+
+// Base classes for all buttons
+const baseStyles = "inline-flex items-center justify-center font-heading font-semibold rounded-md shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition-all duration-150 ease-in-out";
+
+// Classes specific to variants
+const variantStyles = {
+  primary: "bg-brand-green text-white hover:brightness-90 active:brightness-80 focus-visible:ring-brand-green",
+  secondary: "border-2 border-brand-green text-brand-green hover:bg-brand-green hover:text-white active:bg-green-700 active:border-green-700 focus-visible:ring-brand-green",
+};
+
+// Classes specific to sizes
+const sizeStyles = {
+  sm: "px-4 py-2 text-sm",
+  md: "px-6 py-2.5 text-base",
+  lg: "px-8 py-3 text-lg",
+};
+
+const commonClassList = [
+  baseStyles,
+  variantStyles[variant],
+  sizeStyles[size],
+  passThroughClass,
+];
+
+let finalAttrs: Record<string, any> = { ...rest }; // Start with all remaining props
+
+if (Tag === 'a') {
+  // href is already in finalAttrs from 'rest' which is LinkProps
+  delete finalAttrs.isSubmit; // Should be 'never', but good to clean
+} else { // Tag === 'button'
+  finalAttrs.type = (rest as ActionButtonProps).isSubmit ? 'submit' : 'button';
+  delete finalAttrs.isSubmit; // isSubmit is now represented by 'type'
+  delete finalAttrs.href;     // href should be 'never'
+}
+---
+
+<Tag
+  class:list={commonClassList}
+  {...finalAttrs}
+>
+  <slot /> {/* Button text or content goes here */}
+</Tag>

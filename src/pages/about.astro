@@ -1,0 +1,87 @@
+---
+// src/pages/about.astro
+import MainLayout from '../layouts/MainLayout.astro';
+import { Image } from 'astro:assets'; // Import Astro Image component
+
+// Placeholder for Vivienne King's photo if we decide to use an actual image placeholder file
+// import viviennePlaceholder from '../assets/images/placeholder-profile.png'; // Example path
+
+const pageTitle = "About Us | Impactful Places";
+const pageDescription = "Learn about Impactful Places' mission, our founder Vivienne King, and our expert approach to ESG consultancy in the built environment.";
+
+// Content from Brochure (P2, P5)
+const missionContent = {
+  p1: "Impactful Places is an independent ESG consultancy specialising in the built environment. Led by Vivienne King, the consultancy supports responsible business delivery and sustainable impact through ESG strategy design, delivery and communication.",
+  p2: "By supporting the management and assessment of a businesses’ ESG-related opportunities and risks, Impactful Places challenges its clients to strive for ambitious ESG goals grounded in operational and commercial reality."
+};
+
+const vivienneBio = {
+  intro: "Vivienne King is founder of Impactful Places, an independent strategic advisory specialising in helping the real estate industry achieve its full impact potential.",
+  trackRecord: "With a strong track record advocating for environmental and social sustainability, Vivienne has held leadership positions in real estate for more than 30 years as a principal and consultant, working in urban development, regeneration and management, joint venture partnerships, strategy development and ESG.",
+  priorExperience: [
+    "Prior to founding Impactful Places in 2024, Vivienne was Head of Real Estate at impact consultancy The Good Economy.",
+    "She held CEO roles at Revo, the retail property trade association and Soho Housing Association, together with its commercial arm, Soho Ltd.",
+    "Over 20 years of her career was with £14 billion institutional real estate investor, the Crown Estate, where as General Counsel and member of its Executive Committee, she held a wide range of responsibilities including its corporate ESG strategy."
+  ],
+  currentRoles: "Vivienne is the current Chair of the Shopkeepers Campaign for business rates reform; a co-founder of equality, diversity and inclusion campaigning organisation Real Estate Balance and now a member of its Patrons Group; a LandAid Patron and Executive Vice President of the Story of Christmas.",
+  recognition: "In 2023, Vivienne was inducted into the Property Week Hall of Fame for her work in the real estate industry."
+};
+
+const approachContent = {
+  p1: "Bringing deep insight and experience of the built environment and the professional services supporting it, Impactful Places supports clients to express and deliver their own unique vision of purpose and responsibility to investors, clients, employees, communities and the planet.",
+  p2: "Our approach is guided by core values of integrity, collaboration, and a commitment to measurable impact, ensuring that our strategies are not only ambitious but also actionable and authentic." // Added a sentence to reflect "core values" idea
+};
+
+---
+<MainLayout title={pageTitle} description={pageDescription}>
+  <article class="space-y-16 md:space-y-24 py-12 md:py-16">
+
+    {/* Section 1: Our Mission / Who We Are */}
+    <section class="container mx-auto px-4 sm:px-6 lg:px-8 animate-on-scroll">
+      <div class="max-w-3xl mx-auto text-center">
+        <h1 class="text-3xl md:text-4xl font-bold font-heading text-brand-green mb-6">Our Mission</h1>
+      </div>
+      <div class="max-w-3xl mx-auto space-y-6 text-text-primary/90 text-base md:text-lg leading-relaxed">
+        <p>{missionContent.p1}</p>
+        <p>{missionContent.p2}</p>
+      </div>
+    </section>
+
+    {/* Section 2: Our Approach / Longstanding Expertise */}
+    <section class="container mx-auto px-4 sm:px-6 lg:px-8 animate-on-scroll" style="transition-delay: 100ms;">
+      <div class="max-w-3xl mx-auto text-center mb-6">
+        <h2 class="text-3xl md:text-4xl font-bold font-heading text-brand-green">Our Approach & Expertise</h2>
+      </div>
+      <div class="max-w-3xl mx-auto space-y-6 text-text-primary/90 text-base md:text-lg leading-relaxed">
+        <p>{approachContent.p1}</p>
+        <p>{approachContent.p2}</p>
+      </div>
+    </section>
+
+    {/* Section 3: Leadership (Vivienne King) */}
+    <section id="leadership" class="container mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-20 animate-on-scroll" style="transition-delay: 200ms;"> {/* scroll-mt for sticky header offset */}
+      <div class="text-center mb-6">
+        <h2 class="text-3xl md:text-4xl font-bold font-heading text-brand-green">Our Founder: Vivienne King</h2>
+      </div>
+      <div class="flex flex-col md:flex-row gap-8 md:gap-12 items-start max-w-5xl mx-auto"> {/* items-start for top alignment */}
+        <div class="md:w-1/3 flex-shrink-0 mx-auto md:mx-0">
+          <Image 
+            src={import('../assets/images/headshot.jpg')} 
+            alt="Vivienne King, Founder of Impactful Places"
+            class="w-60 sm:w-72 md:w-full object-cover rounded-full md:rounded-lg shadow-lg aspect-[4/5]"
+            widths={[240, 320, 640]}
+            sizes="(max-width: 639px) 240px, (max-width: 767px) 288px, 33vw"
+          />
+        </div>
+        <div class="md:w-2/3 space-y-4 text-text-primary/90 text-base leading-relaxed md:text-left text-center"> {/* Added text-center for mobile, md:text-left for larger */}
+          <p class="font-semibold text-lg">{vivienneBio.intro}</p>
+          <p>{vivienneBio.trackRecord}</p>
+          {vivienneBio.priorExperience.map(paragraph => <p>{paragraph}</p>)}
+          <p>{vivienneBio.currentRoles}</p>
+          <p class="font-semibold">{vivienneBio.recognition}</p>
+        </div>
+      </div>
+    </section>
+
+  </article>
+</MainLayout>

@@ -1,0 +1,11 @@
+---
+// src/components/icons/IconLeaf.astro
+// Placeholder Icon - Replace with actual SVG
+import type { HTMLAttributes } from 'astro/types';
+interface Props extends HTMLAttributes<'svg'> {}
+const { ...attrs } = Astro.props;
+---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...attrs}>
+  <path fill-rule="evenodd" d="M15.43 4.57a7.5 7.5 0 00-10.86 10.86 7.5 7.5 0 0010.86-10.86zM10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12z" clip-rule="evenodd" />
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="8" fill="currentColor">LEAF</text>
+</svg>

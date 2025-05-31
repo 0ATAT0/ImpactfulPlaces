@@ -1,0 +1,39 @@
+---
+// src/pages/services.astro
+import MainLayout from '../layouts/MainLayout.astro';
+import Button from '../components/Button.astro'; // Retain for CTA
+import InteractiveSection from '../components/InteractiveSection.astro';
+import { servicesData } from '../content/servicesData'; // Ensure this path is correct
+
+const pageTitle = "Our Services | Impactful Places";
+const pageDescription = "Explore the ESG consultancy services offered by Impactful Places. Discover how we can help with your company core values, ESG impact strategy, social impact training, communication, stakeholder engagement, and market research.";
+
+---
+<MainLayout title={pageTitle} description={pageDescription}>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <header class="text-center mb-12 md:mb-16 animate-on-scroll">
+      <h1 class="text-4xl md:text-5xl font-bold font-heading text-brand-green mb-4">Our Services</h1>
+      <p class="text-lg md:text-xl text-text-primary/80 max-w-3xl mx-auto">
+        Impactful Places supports real estate organisations across a range of responsible business practices. Select a service below to learn more about how we can help you make a difference.
+      </p>
+    </header>
+
+    {/* Interactive Services Section */}
+    <div class="mb-12 md:mb-16 animate-on-scroll" style="transition-delay: 200ms;">
+      <InteractiveSection sections={servicesData} />
+    </div>
+
+    {/* Concluding CTA Section */}
+    <div class="text-center animate-on-scroll" style="transition-delay: 400ms;"> {/* Adjusted delay */}
+      <h2 class="text-3xl font-bold font-heading text-brand-green mb-6">
+        Ready to Enhance Your Impact?
+      </h2>
+      <p class="text-lg text-text-primary/80 max-w-2xl mx-auto mb-8">
+        Whether you're starting your ESG journey or looking to deepen your existing commitments, we're here to provide expert guidance and tailored solutions.
+      </p>
+      <Button href="/contact" variant="primary" size="lg">
+        Discuss Your Needs
+      </Button>
+    </div>
+  </div>
+</MainLayout>
