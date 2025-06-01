@@ -85,7 +85,7 @@
             *   Links: Clear text, hover effect (e.g., `text-brand-accent` or underline). Active link styling (Astro can help with this via `Astro.url.pathname`).
             *   Responsiveness: Implement a mobile-friendly "hamburger" menu for smaller screens. The menu toggle should be an accessible button. The mobile menu should slide in or overlay.
             *   Behavior: Sticky header (fixed position at the top on scroll).
-    *   `What I did: Created src/components/Header.astro. Implemented a sticky header with a text logo placeholder ('Impactful Places'), desktop navigation, and a responsive mobile menu (hamburger icon toggling a slide-down menu) with JavaScript for its functionality. Styled with Tailwind CSS, including active link highlighting using Astro.url.pathname and ARIA attributes for accessibility.`
+    *   `What I did: Created src/components/Header.astro. Implemented a sticky header with a text logo placeholder ('Impactful Places'), desktop navigation, and a responsive mobile menu (hamburger icon toggling a slide-down menu) with JavaScript for its functionality. Styled with Tailwind CSS, including active link highlighting using Astro.url.pathname and ARIA attributes for accessibility. Updated the mobile menu script to use the 'astro:page-load' event and 'is:inline' to ensure it functions correctly with Astro View Transitions, resolving an issue where the menu would stop working after page navigation.`
 
 *   **[x] Task 2.2: Create Footer Component**
     *   **Goal:** Develop the site footer.
@@ -101,7 +101,7 @@
             *   Padding: Appropriate vertical and horizontal padding.
             *   Text: Smaller font size, potentially `text-gray-600`.
             *   Layout: Center-aligned or sectioned.
-    *   `What I did: Created src/components/Footer.astro. Implemented a footer with a dynamic copyright year, placeholder links for 'Privacy Policy' and 'Terms of Service', and a placeholder LinkedIn link (with a basic SVG icon). Styled with Tailwind CSS for a clean, responsive layout, using bg-gray-100, appropriate padding, and text-sm text-gray-600. Added mt-auto for sticky footer compatibility.`
+    *   `What I did: Created src/components/Footer.astro. Implemented a footer with a dynamic copyright year, placeholder links for 'Privacy Policy' and 'Terms of Service', and a LinkedIn link (with a basic SVG icon). Styled with Tailwind CSS for a clean, responsive layout, using bg-gray-100, appropriate padding, and text-sm text-gray-600. Added mt-auto for sticky footer compatibility. Updated the LinkedIn URL to 'https://www.linkedin.com/in/vivienneiking'.`
 
 *   **[x] Task 2.3: Update MainLayout.astro**
     *   **Goal:** Integrate Header and Footer into the `MainLayout.astro`.
@@ -332,7 +332,7 @@ Here's the new task for the Leadership page and the necessary adjustments to oth
         *   **Inactive:** `bg-gray-50 hover:bg-gray-100 border border-gray-300 text-primary p-4 rounded-lg flex items-center justify-center space-x-2 transition-colors duration-200`.
         *   **Active:** Specific `activeBgColor` and `activeTextColor` from props.
     *   **Content Card Styling:** `bg-white p-6 rounded-lg shadow-md mt-4` (or similar clean style).
-    *   `What I did: Created src/components/InteractiveSection.astro with props for sections (id, buttonText, icon, colors, contentTitle, contentDetails). Implemented HTML structure for buttons and content cards. Added client-side JavaScript for toggling active section, updating button styles (inactive/active), and showing/hiding content cards. Ensured no section is active on initial load. Fixed a TypeScript error by casting querySelector result to HTMLElement.`
+    *   `What I did: Created src/components/InteractiveSection.astro with props for sections (id, buttonText, icon, colors, contentTitle, contentDetails). Implemented HTML structure for buttons and content cards. Added client-side JavaScript for toggling active section, updating button styles (inactive/active), and showing/hiding content cards. Ensured no section is active on initial load. Fixed a TypeScript error by casting querySelector result to HTMLElement. Updated base button classes to include `w-full md:w-auto` for responsive button widths, making them full-width on mobile and auto-width on larger screens.`
 
     *   **[x] Task 7.2: Prepare Content and Icons for ESG Pillars**
     *   **Goal:** Define the data for each ESG pillar and propose new icons.
@@ -367,7 +367,7 @@ Here's the new task for the Leadership page and the necessary adjustments to oth
         *   Ensure smooth transitions (if any, e.g., subtle fade for content card appearance) are handled by the client-side script or CSS.
         *   Test toggle behavior thoroughly: clicking active button deactivates, clicking another button switches content and styles.
         *   Ensure revealed content cards are well-formatted, readable, and visually distinct from the buttons but harmonious with the page.
-    *   `What I did: Refined src/components/InteractiveSection.astro. Correctly passed section-specific data (colors, id) to the client script via a data-sections attribute set in Astro frontmatter. Removed the problematic (window as any).Astro.props access from the script. Added CSS opacity transitions (opacity-0, opacity-100, transition-opacity, duration-300) to content cards for smooth fade-in/out. Updated the script to manage these opacity classes along with the 'hidden' class, using a small timeout to ensure proper transition sequencing.`
+    *   `What I did: Refined src/components/InteractiveSection.astro. Correctly passed section-specific data (colors, id) to the client script via a data-sections attribute set in Astro frontmatter. Removed the problematic (window as any).Astro.props access from the script. Added CSS opacity transitions (opacity-0, opacity-100, transition-opacity, duration-300) to content cards for smooth fade-in/out. Updated the script to manage these opacity classes along with the 'hidden' class, using a small timeout to ensure proper transition sequencing. Implemented conditional scrolling on mobile: when a section is activated, the page now scrolls to show the content card, accounting for the sticky header height to prevent content from being obscured.`
 
 ---
 

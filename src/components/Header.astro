@@ -86,35 +86,48 @@ const currentPath = Astro.url.pathname;
   </div>
 </header>
 
-<script>
-  const menuButton = document.getElementById('mobile-menu-button');
-  const mobileMenu = document.getElementById('mobile-menu');
-  const iconHamburger = document.getElementById('icon-hamburger');
-  const iconClose = document.getElementById('icon-close');
+<script is:inline>
+  function initMobileMenu() {
+    const menuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const iconHamburger = document.getElementById('icon-hamburger');
+    const iconClose = document.getElementById('icon-close');
 
-  if (menuButton && mobileMenu && iconHamburger && iconClose) {
-    menuButton.addEventListener('click', () => {
-      const isExpanded = menuButton.getAttribute('aria-expanded') === 'true' || false;
-      menuButton.setAttribute('aria-expanded', String(!isExpanded));
-      mobileMenu.classList.toggle('hidden');
-      // Optional: Animate mobile menu (e.g., slide down)
-      // if (!isExpanded) {
-      //   mobileMenu.style.maxHeight = mobileMenu.scrollHeight + "px";
-      // } else {
-      //   mobileMenu.style.maxHeight = "0";
-      // }
-      iconHamburger.classList.toggle('hidden');
-      iconClose.classList.toggle('hidden');
-    });
+    if (menuButton && mobileMenu && iconHamburger && iconClose) {
+      // Prevent re-initialization if already done on this specific element instance
+      if (menuButton.dataset.mobileMenuInitialized) {
+        return;
+      }
+      menuButton.dataset.mobileMenuInitialized = 'true';
 
-    // Close mobile menu when a link is clicked (for SPA-like behavior with ViewTransitions)
-    const mobileNavLinks = mobileMenu.querySelectorAll('a');
-    mobileNavLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        if (menuButton.getAttribute('aria-expanded') === 'true') {
-          menuButton.click(); // Simulate a click to close the menu
+      const toggleMenu = () => {
+        const isExpanded = menuButton.getAttribute('aria-expanded') === 'true' || false;
+        menuButton.setAttribute('aria-expanded', String(!isExpanded));
+        mobileMenu.classList.toggle('hidden');
+        iconHamburger.classList.toggle('hidden');
+        iconClose.classList.toggle('hidden');
+      };
+
+      menuButton.addEventListener('click', toggleMenu);
+
+      // Close mobile menu when a link is clicked
+      const mobileNavLinks = mobileMenu.querySelectorAll('a');
+      mobileNavLinks.forEach(link => {
+        // Ensure listener isn't duplicated on the same link instance if initMobileMenu is called multiple times
+        if (link.dataset.navLinkListenerAttached) {
+            return;
         }
+        link.dataset.navLinkListenerAttached = 'true';
+        
+        link.addEventListener('click', () => {
+          if (menuButton.getAttribute('aria-expanded') === 'true') {
+            toggleMenu(); // Call the same toggle function to close the menu
+          }
+        });
       });
-    });
+    }
   }
+
+  // astro:page-load fires on initial page load and after every View Transition
+  document.addEventListener('astro:page-load', initMobileMenu);
 </script>

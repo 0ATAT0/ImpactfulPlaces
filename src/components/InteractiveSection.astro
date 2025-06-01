@@ -36,7 +36,7 @@ const sectionsForScript = sections.map(s => ({
 }));
 const sectionsJson = JSON.stringify(sectionsForScript);
 
-const baseButtonClasses = "min-w-[180px] md:min-w-[200px] py-3 px-4 rounded-lg shadow-md transition-all duration-200 focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2 flex items-center justify-center space-x-3 text-base font-medium";
+const baseButtonClasses = "w-full md:w-auto min-w-[180px] md:min-w-[200px] py-3 px-4 rounded-lg shadow-md transition-all duration-200 focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2 flex items-center justify-center space-x-3 text-base font-medium";
 // Initial inactive state classes are applied by script to ensure correct dynamic coloring.
 ---
 
@@ -208,6 +208,18 @@ const baseButtonClasses = "min-w-[180px] md:min-w-[200px] py-3 px-4 rounded-lg s
             setTimeout(() => {
               currentCard.classList.remove('opacity-0');
               currentCard.classList.add('opacity-100');
+              // Scroll into view only on mobile (screens smaller than md breakpoint: 768px)
+              if (window.innerWidth < 768) {
+                const headerHeightInPx = 64; // h-16 on mobile = 4rem = 64px
+                const paddingInPx = 16; // 1rem extra padding
+                const cardTopRelativeToDocument = currentCard.getBoundingClientRect().top + window.scrollY;
+                const targetScrollY = cardTopRelativeToDocument - headerHeightInPx - paddingInPx;
+                
+                window.scrollTo({
+                  top: targetScrollY,
+                  behavior: 'smooth'
+                });
+              }
             }, 10); 
           }
           activeSectionId = sectionId;
