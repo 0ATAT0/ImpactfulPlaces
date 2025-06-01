@@ -18,8 +18,8 @@ const vivienneBio = {
   ],
   currentRoles: "Vivienne is the current Chair of the Shopkeepers Campaign for business rates reform; a co-founder of equality, diversity and inclusion campaigning organisation Real Estate Balance and now a member of its Patrons Group; a LandAid Patron and Executive Vice President of the Story of Christmas.",
   recognition: "In 2023, Vivienne was inducted into the Property Week Hall of Fame for her work in the real estate industry.",
-  email: "vivienne@impactfulplaces.co.uk",
-  phone: "+44 771 3087781"
+  email: "vivienne@impactfulplaces.co.uk"
+  // Phone details removed as per request.
 };
 ---
 <MainLayout title={pageTitle} description={pageDescription}>
@@ -68,9 +68,6 @@ const vivienneBio = {
           <h3 class="text-xl font-bold font-heading text-brand-green mb-3">Contact Vivienne</h3>
           <p>
             Email: <a href={`mailto:${vivienneBio.email}`} class="text-brand-green hover:underline">{vivienneBio.email}</a>
-          </p>
-          <p>
-            Phone: <a href={`tel:${vivienneBio.phone.replace(/\s/g, '')}`} class="text-brand-green hover:underline">{vivienneBio.phone}</a>
           </p>
         </div>
       </section>
